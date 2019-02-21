@@ -46,8 +46,8 @@ app.post('/users-edit/:id',(req,res)=>{
         console.log(result)
     })
 })
-//delete data user
 
+//delete data user
 app.delete('/delete-users/:id',(req,res)=>{
     var sql = `delete from users where id=${req.params.id}`;
     conn.query(sql,(err,result)=>{
@@ -92,7 +92,7 @@ app.post('/produk-edit/:id',(req,res)=>{
     })
 })
 //read data produk
-app.get('/produk-list' , (req,res) => {
+app.get('/produk' , (req,res) => {
     var sql = 'select * from produk;'
     conn.query(sql ,(err,result)=>{
         res.send(result)
@@ -101,7 +101,7 @@ app.get('/produk-list' , (req,res) => {
 })
 
 //delete data produk
-app.post('/produk-delete/:id',(req,res)=>{
+app.delete('/produk-delete/:id',(req,res)=>{
     var sql = `delete from produk where id=${req.params.id}`;
     conn.query(sql,(err,result)=>{
         res.send(result)
@@ -121,7 +121,7 @@ app.post('/kategori-add',(req,res)=>{
     })
 })
 //read data kategori
-app.get('/kategori-list' , (req,res) => {
+app.get('/kategori' , (req,res) => {
     var sql = 'select * from kategori';
     conn.query(sql ,(err,result)=>{
         res.send(result)
@@ -140,7 +140,7 @@ app.post('/kategori-edit/:id',(req,res)=>{
 })
 
 //delete kategori
-app.post('/kategori-delete/:id',(req,res)=>{
+app.delete('/kategori-delete/:id',(req,res)=>{
     var sql = `delete from kategori where id=${req.params.id}`;
     conn.query(sql,(err,result)=>{
         res.send(result)
@@ -161,7 +161,7 @@ app.post('/img-add',(req,res)=>{
     })
 })
 //read data image
-app.get('/img-list' , (req,res) => {
+app.get('/img' , (req,res) => {
     var sql = 'select * from image';
     conn.query(sql ,(err,result)=>{
         res.send(result)
@@ -189,13 +189,15 @@ app.post('/image-edit/:id',(req,res)=>{
 })
 
 //delete image
-app.post('/image-delete/:id',(req,res)=>{
+app.delete('/image-delete/:id',(req,res)=>{
     var sql = `delete from image where id_produk=${req.params.id}`;
     conn.query(sql,(err,result)=>{
         res.send(result)
         console.log(result)
     })
 })
+
+//show produk detail
 app.get('/produk-detail/:id' , (req,res) => {
     var sql = `SELECT 
     p.id as id,
@@ -210,6 +212,23 @@ app.get('/produk-detail/:id' , (req,res) => {
      JOIN image i on p.id = i.id_produk
      WHERE p.id = ${req.params.id}`
     conn.query(sql ,(err,result)=>{
+        res.send(result)
+        console.log(result)
+    })
+})
+
+//show list produk
+app.get('/list-produk', (req,res) => {
+    var sql = `SELECT 
+    p.id as id,
+    p.namaproduk as nama_produk,
+     p.hargaproduk as harga_produk, 
+     k.nama as kategori, 
+     i.img1 as image1
+     FROM produk p 
+     JOIN kategori k ON p.kategoriproduk = k.id 
+     JOIN image i on p.id = i.id_produk`
+    conn.query(sql,(err,result)=>{
         res.send(result)
         console.log(result)
     })
