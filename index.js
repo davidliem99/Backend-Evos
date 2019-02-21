@@ -24,7 +24,7 @@ const conn = mysql.createConnection({
 //PAKE NODE INDEX.JS
 
 app.get('/', (req,res) => {
-    res.send('<h1>Ini Homepage</h1>')   
+    res.send('<center><h1>SUCCESS RUNNING API</h1></center>')   
     
 })
 
@@ -160,6 +160,7 @@ app.post('/img-add',(req,res)=>{
         console.log(result)
     })
 })
+
 //read data image
 app.get('/img' , (req,res) => {
     var sql = 'select * from image';
@@ -209,7 +210,7 @@ app.get('/produk-detail/:id' , (req,res) => {
      i.img3 as image3 
      FROM produk p 
      JOIN kategori k ON p.kategoriproduk = k.id 
-     JOIN image i on p.id = i.id_produk
+     JOIN image i ON p.id = i.id_produk
      WHERE p.id = ${req.params.id}`
     conn.query(sql ,(err,result)=>{
         res.send(result)
@@ -227,11 +228,43 @@ app.get('/list-produk', (req,res) => {
      i.img1 as image1
      FROM produk p 
      JOIN kategori k ON p.kategoriproduk = k.id 
-     JOIN image i on p.id = i.id_produk`
+     JOIN image i ON p.id = i.id_produk`
     conn.query(sql,(err,result)=>{
         res.send(result)
         console.log(result)
     })
 })
+
+//Mulai API Cart
+app.get('/list-cart/:id', (req,res) => {
+    var sql = `SELECT
+    p.namaproduk as nama_produk,
+     p.hargaproduk as harga_produk,
+     c.qty as qty
+    FROM cart c
+    JOIN users u ON c.id_user = u.id
+    JOIN produk p ON c.id_produk = p.id
+    WHERE u.id = ${req.params.id}`
+    conn.query(sql,(err,result)=>{
+        res.send(result)
+        console.log(result)
+    })
+})
+
+// app.post('/edit-cart/:id',(req,res)=>{
+//     var editcart = req.body
+//     var sql = `update cart set ? where =${req.params.id}`;
+//     conn.query(sql, editcart,(err,result)=>{
+//         res.send(result)
+//         console.log(result)
+//     })
+// })
+
+
+
+
+
+
+
 
 app.listen(port, () => console.log('API Active On Port ' + port))
