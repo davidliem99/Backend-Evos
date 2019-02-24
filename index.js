@@ -292,7 +292,7 @@ app.get('/list-produk', (req,res) => {
 })
 
 //Mulai API Cart
-app.get('/list-cart/:id', (req,res) => {
+app.get('/list-cart/:username', (req,res) => {
     var sql = `SELECT
     p.namaproduk as nama_produk,
      p.hargaproduk as harga_produk,
@@ -300,8 +300,17 @@ app.get('/list-cart/:id', (req,res) => {
     FROM cart c
     JOIN users u ON c.id_user = u.id
     JOIN produk p ON c.id_produk = p.id
-    WHERE u.id = ${req.params.id}`
+    WHERE u.username = '${req.params.username}'`
     conn.query(sql,(err,result)=>{
+        res.send(result)
+        console.log(result)
+    })
+})
+
+app.post('/insert-cart',(req,res)=>{
+    var insertCart = req.body
+    var sql = `insert into cart set ?`;
+    conn.query(sql, insertCart,(err,result)=>{
         res.send(result)
         console.log(result)
     })
